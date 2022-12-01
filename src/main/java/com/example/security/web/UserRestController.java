@@ -1,9 +1,11 @@
-package com.example.security.rest;
+package com.example.security.web;
 
 import com.example.security.model.Admin;
 import com.example.security.model.Driver;
 import com.example.security.model.Passenger;
 import com.example.security.model.User;
+import com.example.security.repository.JWTRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,8 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("api/v1")
 public class UserRestController {
+    @Autowired
+    JWTRepository jwtRepository;
 
     private List<User> users = Stream.of(
             new Passenger(1L,"Passenger","P"),
@@ -23,7 +27,9 @@ public class UserRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
-    public List<User> getAll() {return users;}
+    public List<User> getAll(String token) {
+        return users;
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")

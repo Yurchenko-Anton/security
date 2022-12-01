@@ -28,8 +28,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-//	implementation 'org.liquibase:liquibase-core'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+	implementation 'org.liquibase:liquibase-core'
 }
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()

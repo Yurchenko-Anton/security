@@ -1,8 +1,11 @@
-package com.example.security.rest;
+package com.example.security.web;
 
+import com.example.security.entity.JWT;
 import com.example.security.entity.User;
+import com.example.security.repository.JWTRepository;
 import com.example.security.repository.UserRepository;
 import com.example.security.security.JwtTokenProvider;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,30 +25,32 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthenticationRestControllerV1 {
+@AllArgsConstructor
+public class AuthenticationControllerV1 {
 
     private final AuthenticationManager authenticationManager;
     private UserRepository userRepository;
     private JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private JWTRepository jwtRepository;
+
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDTO request) {
+    public ResponseEntity<Map<Object,Object>> authenticate(@RequestBody AuthenticationRequestDTO request) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getFirstName(), request.getPassword()));
-            User user = userRepository.findByFirstName(request.getFirstName()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
-            String token = jwtTokenProvider.createToken(request.getFirstName(), user.getRole().name());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
+            User user = userRepository.findByFirstName(request.getName()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
+            String token = jwtTokenProvider.createToken(request.getName(), user.getRole().name());
             Map<Object, Object> response = new HashMap<>();
-            response.put("name", request.getFirstName());
+            response.put("name", request.getName());
             response.put("token", token);
+            JWT jwt = new JWT();
+            jwt.setUser(user);
+            jwt.setToken(token);
+            jwtRepository.save(jwt);
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid name/pass combination", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
     }
