@@ -10,30 +10,55 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class UsersService {
+    private final int ENCRYPT_STRENGTH = 12;
+
     UserRepository userRepository;
     JwtTokenProvider jwtTokenProvider;
 
-    public User changePassword(String token, String password) {
-        User user = userRepository.findById(Long.parseLong(jwtTokenProvider.decodeToken(token).get("id").toString()))
+    private void saveUser(User user){
+        userRepository.save(user);
+    }
+    public void changePassword(String token, String password) {
+        Long id = Long.parseLong(jwtTokenProvider.decodeToken(token).get("id").toString());
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("user doesn't exist"));
-        user.setPassword(new BCryptPasswordEncoder(12).encode(password));
-        return user;
+        user.setPassword(new BCryptPasswordEncoder(ENCRYPT_STRENGTH).encode(password));
+        saveUser(user);
     }
 
-    public User validate(User user) {
-        if (user.getRole().equals(Role.ADMIN) || user.getRole().getAuthorities().isEmpty()) {
-            user.setStatus(Status.DISAPPROVED);
+    public Status validate(User user) {
+        if (user.getRole().equals(Role.ADMIN)) {
+            return Status.DISAPPROVED;
         } else {
-            user.setStatus(Status.APPROVED);
+           return Status.APPROVED;
         }
+    }
+
+    public String encryptPass(String pass) {
+        return new BCryptPasswordEncoder(ENCRYPT_STRENGTH).encode(pass);
+    }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    public Optional<User> getUserByPhone(String phone){
+        return userRepository.findByPhone(phone);
+    }
+
+    public Optional<User> getUserById(Long id){
+        return userRepository.findById(id);
+    }
+    public User createNewUser(User user){
+        user.setPassword(encryptPass(user.getPassword()));
+        user.setStatus(validate(user));
+        saveUser(user);
         return user;
     }
-
-    public String codePass(String pass) {
-        return new BCryptPasswordEncoder(12).encode(pass);
-    }
-
 }

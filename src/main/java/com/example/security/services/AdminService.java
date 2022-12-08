@@ -16,36 +16,45 @@ import java.util.Optional;
 public class AdminService {
     UserRepository userRepository;
 
+    private void saveUser(User user){
+        userRepository.save(user);
+    }
+    private void saveAllUser(List<User> users){
+        userRepository.saveAll(users);
+    }
+    public List<User> getNotApproveUsers() {
+        return userRepository.findAllByStatus(Status.DISAPPROVED);
+    }
+
     public Optional<User> findUsers(Long id) {
         return userRepository.findById(id);
 
     }
 
     public ResponseEntity<User> changeRole(Long id, Role role) {
-        Optional<User> user = findUsers(id);
-        if (user.isPresent()) {
-            user.get().setRole(role);
-            userRepository.save(user.get());
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return findUsers(id).map(userOpt -> {
+            userOpt.setRole(role);
+            saveUser(userOpt);
+            return ResponseEntity.ok(userOpt);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<User> approve(Long id) {
-        Optional<User> user = findUsers(id);
-        if (user.isPresent()) {
-            user.get().setStatus(Status.APPROVED);
-            userRepository.save(user.get());
-            return ResponseEntity.ok(user.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return findUsers(id).map(userOpt -> {
+            userOpt.setStatus(Status.APPROVED);
+            saveUser(userOpt);
+            return ResponseEntity.ok(userOpt);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public List<User> approveAll() {
+    public void approveAll() {
         List<User> users = userRepository.findAllByStatus(Status.DISAPPROVED);
         users.forEach(user -> user.setStatus(Status.APPROVED));
-        return users;
+        saveAllUser(users);
+    }
+
+
+    public void deleteUser(Long id){
+        userRepository.deleteById(id);
     }
 }

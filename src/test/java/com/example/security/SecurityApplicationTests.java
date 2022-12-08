@@ -19,14 +19,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@EnableFeignClients(basePackages = "/test/java/com/example/security/SecurityApplicationTests.java")
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = SecurityApplication.class)
@@ -35,11 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class SecurityApplicationTests {
 
     @Autowired
+    private TestFeignLoginClient feignLoginClient;
+    @Autowired
     private TestFeignUserClient feignUserClient;
     @Autowired
     private TestFeignAdminClient feignAdminClient;
-    @Autowired
-    private TestFeignLoginClient feignLoginClient;
+
 
     private static AuthenticationRequestDTO admin;
     private static AuthenticationRequestDTO notAdmin;

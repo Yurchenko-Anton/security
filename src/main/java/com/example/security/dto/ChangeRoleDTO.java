@@ -5,8 +5,6 @@ import lombok.Value;
 
 @Value
 public class ChangeRoleDTO {
-
     Long id;
     Role role;
-
 }

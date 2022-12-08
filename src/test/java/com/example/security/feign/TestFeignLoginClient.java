@@ -11,5 +11,5 @@ import java.util.Map;
 @FeignClient(value = "feignLogin", url = "http://localhost:8080/api/v1/auth")
 public interface TestFeignLoginClient {
     @PostMapping("/login")
-    ResponseEntity<Map<Object, Object>> authenticate(@RequestBody AuthenticationRequestDTO request);
+    ResponseEntity<Map<String, String>> authenticate(@RequestBody AuthenticationRequestDTO request);
 }

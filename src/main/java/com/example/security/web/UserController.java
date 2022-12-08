@@ -14,42 +14,38 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/v1")
 @AllArgsConstructor
-public class UserRestController {
+public class UserController {
 
-    UserRepository userRepository;
     JwtTokenProvider jwtTokenProvider;
     UsersService usersService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
     public List<User> getAll() {
-        return userRepository.findAll();
+        return usersService.getAllUsers();
     }
 
     @GetMapping("/phone/{phone}")
     @PreAuthorize("hasAuthority('users:read')")
     public Optional<User> getByPhone(@PathVariable String phone) {
-        return userRepository.findByPhone(phone);
+        return usersService.getUserByPhone(phone);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
     public Optional<User> getById(@PathVariable Long id) {
-        return userRepository.findById(id);
+        return usersService.getUserById(id);
     }
 
     @PostMapping("/registration")
     @PreAuthorize("permitAll()")
     public User registration(@RequestBody User user) {
-        user = usersService.validate(user);
-        user.setPassword(usersService.codePass(user.getPassword()));
-        userRepository.save(user);
-        return user;
+        return usersService.createNewUser(user);
     }
 
     @PutMapping("change/pass")
     @PreAuthorize("hasAuthority('users:read')")
     public void changePass(@RequestHeader("Authorization") String token, @RequestBody String password) {
-        userRepository.save(usersService.changePassword(token, password));
+        usersService.changePassword(token, password);
     }
 }

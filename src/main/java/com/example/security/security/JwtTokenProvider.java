@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtTokenProvider {
@@ -24,8 +25,8 @@ public class JwtTokenProvider {
     private String secretKey;
     @Value("${jwt.header}")
     private String authHeader;
-    @Value("${jwt.expiration}")
-    private long validityInMillis;
+    @Value("${jwt.expirationMinutes}")
+    private long validityInMinutes;
 
     public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -37,11 +38,12 @@ public class JwtTokenProvider {
     }
 
     public String createToken(String username, String role, Long id) {
+        long expirationTimeMillis = TimeUnit.MINUTES.toMillis(validityInMinutes);
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
         claims.put("id", id);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMillis * 1000);
+        Date validity = new Date(now.getTime() + expirationTimeMillis);
 
         return Jwts.builder()
                 .setClaims(claims)

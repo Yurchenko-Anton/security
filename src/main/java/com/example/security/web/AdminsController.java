@@ -2,7 +2,6 @@ package com.example.security.web;
 
 import com.example.security.dto.ChangeRoleDTO;
 import com.example.security.entity.User;
-import com.example.security.model.Status;
 import com.example.security.repository.UserRepository;
 import com.example.security.services.AdminService;
 import lombok.AllArgsConstructor;
@@ -22,8 +21,8 @@ public class AdminsController {
     AdminService adminService;
 
     @GetMapping("/get")
-    public List<User> getNotApproveUsers() {
-        return userRepository.findAllByStatus(Status.DISAPPROVED);
+    public List<User> notApproveUsers() {
+        return adminService.getNotApproveUsers();
     }
 
     @PutMapping("/change")
@@ -38,11 +37,11 @@ public class AdminsController {
 
     @PutMapping("approve")
     public void approveAll() {
-        userRepository.saveAll(adminService.approveAll());
+        adminService.approveAll();
     }
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        adminService.deleteUser(id);
     }
 }

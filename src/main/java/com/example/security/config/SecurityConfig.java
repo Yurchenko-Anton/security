@@ -1,6 +1,7 @@
 package com.example.security.config;
 
 import com.example.security.security.JwtConfigurer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 
     private final JwtConfigurer jwtConfigurer;
 
@@ -47,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        int bcryptStrength = 12;
+        return new BCryptPasswordEncoder(bcryptStrength);
     }
 }
