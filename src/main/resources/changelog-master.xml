@@ -8,11 +8,6 @@
         <dbms type="mysql"/>
     </preConditions>
 
-    <changeSet id="0" author="aleks_ush">
-        <tagDatabase tag="db_init"/>
-    </changeSet>
-
-    <include file="01-changeset-users-table.xml" relativeToChangelogFile="true"/>
-
+    <include file="db.changelog/v-1.0/01-changeset-users-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

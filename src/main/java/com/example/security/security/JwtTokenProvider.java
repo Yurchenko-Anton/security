@@ -23,9 +23,9 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
     @Value("${jwt.header}")
-    private String authorizationHeader; //authHeader
+    private String authHeader;
     @Value("${jwt.expiration}")
-    private long validityInMilliseconds; // validityInMillis
+    private long validityInMillis;
 
     public JwtTokenProvider(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -36,11 +36,12 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String username, String role) {
+    public String createToken(String username, String role, Long id) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
+        claims.put("id", id);
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds * 1000);
+        Date validity = new Date(now.getTime() + validityInMillis * 1000);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -69,6 +70,10 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(authorizationHeader);
+        return request.getHeader(authHeader);
+    }
+
+    public Claims decodeToken(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 }

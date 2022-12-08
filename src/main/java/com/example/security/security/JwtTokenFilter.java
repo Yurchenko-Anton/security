@@ -31,11 +31,11 @@ public class JwtTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        }catch (JwtAuthenticationException e){
+        } catch (JwtAuthenticationException e) {
             SecurityContextHolder.clearContext();
             ((HttpServletResponse) response).sendError(e.getHttpStatus().value());
             throw new JwtAuthenticationException("JWT token is finish or invalid");
         }
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
 }

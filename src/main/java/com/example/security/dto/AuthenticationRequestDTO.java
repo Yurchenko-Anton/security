@@ -1,11 +1,11 @@
-package com.example.security.web;
+package com.example.security.dto;
 
 import lombok.Value;
 
 @Value
 public class AuthenticationRequestDTO {
 
-    String name;
+    String phone;
     String password;
 
 
