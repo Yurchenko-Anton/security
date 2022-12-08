@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
-        int bcryptStrength = 12;
-        return new BCryptPasswordEncoder(bcryptStrength);
+        int encryptStrength = 12;
+        return new BCryptPasswordEncoder(encryptStrength);
     }
 }
