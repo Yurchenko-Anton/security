@@ -1,9 +1,9 @@
 package com.example.security.config;
 
 import com.example.security.security.JwtConfigurer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final int ENCRYPT_STRENGTH = 12;
 
     private final JwtConfigurer jwtConfigurer;
 
@@ -35,6 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/v1/auth/login").permitAll()
                 .antMatchers("/api/v1/registration").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/docs").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -49,7 +52,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
-        int encryptStrength = 12;
-        return new BCryptPasswordEncoder(encryptStrength);
+        return new BCryptPasswordEncoder(ENCRYPT_STRENGTH);
     }
 }

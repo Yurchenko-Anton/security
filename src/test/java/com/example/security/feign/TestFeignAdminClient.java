@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "feignAdmin", url = "http://localhost:8080/api/v1/admins")
+@FeignClient(value = "feignAdmin", url = "http://localhost:8080/auth/admins")
 public interface TestFeignAdminClient {
-    @GetMapping("/get")
+    @GetMapping
     List<User> getNotApproveUsers(@RequestHeader HttpHeaders headers);
 
-    @PutMapping("/change")
+    @PutMapping
     ResponseEntity<User> changeRole(@RequestHeader HttpHeaders headers, @RequestBody ChangeRoleDTO changeRoleDto);
 
-    @PutMapping("approve/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<User> approve(@RequestHeader HttpHeaders headers, @PathVariable Long id);
 
     @PutMapping("approve")
     void approveAll(@RequestHeader HttpHeaders headers);
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     void delete(@RequestHeader HttpHeaders headers, @PathVariable Long id);
 }

@@ -22,27 +22,27 @@ import java.util.Map;
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
-    public Map<Object, Object> authenticate(AuthenticationRequestDTO request) throws AuthenticationException {
-        boolean authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhone(), request.getPassword())).isAuthenticated();
+    public Map<String, String> authenticate(AuthenticationRequestDTO request) throws AuthenticationException {
+        boolean authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getId(), request.getPassword())).isAuthenticated();
         User user = findUser( authenticate, request);
         return buildResponse(user);
     }
 
     private User findUser(boolean auth, AuthenticationRequestDTO request) throws AuthenticationException {
         if (auth) {
-            return userRepository.findByPhone(request.getPhone()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
+            return userRepository.findById(request.getId()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
         } else throw new UsernameNotFoundException("User doesn't authenticate");
     }
 
-    public Map<Object, Object> buildResponse(User user) {
-        return new HashMap<Object, Object>() {
+    public Map<String, String> buildResponse(User user) {
+        return new HashMap<String, String>() {
             {
                 put("phone", user.getPhone());
-                put("token", jwtTokenProvider.createToken(user.getPhone(), user.getRole().name(), user.getId()));
+                put("token", jwtTokenProvider.createToken(user.getId(), user.getRole().name(), user.getPhone()));
             }
         };
     }

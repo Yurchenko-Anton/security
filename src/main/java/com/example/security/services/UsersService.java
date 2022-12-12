@@ -16,32 +16,22 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class UsersService {
-    private final int ENCRYPT_STRENGTH = 12;
 
-    UserRepository userRepository;
-    JwtTokenProvider jwtTokenProvider;
+    private static final int ENCRYPT_STRENGTH = 12;
+
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private void saveUser(User user){
         userRepository.save(user);
     }
+
     public void changePassword(String token, String password) {
         Long id = Long.parseLong(jwtTokenProvider.decodeToken(token).get("id").toString());
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("user doesn't exist"));
         user.setPassword(new BCryptPasswordEncoder(ENCRYPT_STRENGTH).encode(password));
         saveUser(user);
-    }
-
-    public Status validate(User user) {
-        if (user.getRole().equals(Role.ADMIN)) {
-            return Status.DISAPPROVED;
-        } else {
-           return Status.APPROVED;
-        }
-    }
-
-    public String encryptPass(String pass) {
-        return new BCryptPasswordEncoder(ENCRYPT_STRENGTH).encode(pass);
     }
 
     public List<User> getAllUsers(){
@@ -55,10 +45,20 @@ public class UsersService {
     public Optional<User> getUserById(Long id){
         return userRepository.findById(id);
     }
+
     public User createNewUser(User user){
         user.setPassword(encryptPass(user.getPassword()));
         user.setStatus(validate(user));
         saveUser(user);
         return user;
+    }
+
+    private Status validate(User user) {
+        if (user.getRole().equals(Role.ADMIN)) return Status.DISAPPROVED;
+        else return Status.APPROVED;
+    }
+
+    private String encryptPass(String pass) {
+        return new BCryptPasswordEncoder(ENCRYPT_STRENGTH).encode(pass);
     }
 }

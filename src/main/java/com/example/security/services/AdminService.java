@@ -14,14 +14,17 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class AdminService {
-    UserRepository userRepository;
 
-    private void saveUser(User user){
+    private final UserRepository userRepository;
+
+    private void saveUser(User user) {
         userRepository.save(user);
     }
-    private void saveAllUser(List<User> users){
+
+    private void saveAllUser(List<User> users) {
         userRepository.saveAll(users);
     }
+
     public List<User> getNotApproveUsers() {
         return userRepository.findAllByStatus(Status.DISAPPROVED);
     }
@@ -54,7 +57,7 @@ public class AdminService {
     }
 
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 }

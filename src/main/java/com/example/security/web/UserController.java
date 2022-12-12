@@ -1,9 +1,13 @@
 package com.example.security.web;
 
 import com.example.security.entity.User;
-import com.example.security.repository.UserRepository;
 import com.example.security.security.JwtTokenProvider;
 import com.example.security.services.UsersService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +20,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserController {
 
-    JwtTokenProvider jwtTokenProvider;
-    UsersService usersService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UsersService usersService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('users:read')")
@@ -39,6 +43,7 @@ public class UserController {
 
     @PostMapping("/registration")
     @PreAuthorize("permitAll()")
+    @Operation(summary = "Create new user")
     public User registration(@RequestBody User user) {
         return usersService.createNewUser(user);
     }

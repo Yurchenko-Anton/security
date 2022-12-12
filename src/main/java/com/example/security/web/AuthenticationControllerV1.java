@@ -23,7 +23,7 @@ public class AuthenticationControllerV1 {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<Object, Object>> authenticate(@Qualifier("Authenticate") @RequestBody AuthenticationRequestDTO request) throws AuthenticationException {
+    public ResponseEntity<Map<String, String>> authenticate(@Qualifier("Authenticate") @RequestBody AuthenticationRequestDTO request) throws AuthenticationException {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
