@@ -1,6 +1,7 @@
 package com.example.security.security;
 
 import com.example.security.entity.User;
+import com.example.security.model.Status;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -59,13 +60,13 @@ public class SecurityUser implements UserDetails {
         return isActive;
     }
 
-    public static UserDetails fromUser(User user){
+    public static UserDetails fromUser(User user) {
         return new org.springframework.security.core.userdetails.User(
-                user.getFirstName(), user.getPassword(),
-                true,
-                true,
-                true,
-                true,
+                user.getId().toString(), user.getPassword(),
+                user.getStatus().equals(Status.APPROVED),
+                user.getStatus().equals(Status.APPROVED),
+                user.getStatus().equals(Status.APPROVED),
+                user.getStatus().equals(Status.APPROVED),
                 user.getRole().getAuthorities()
         );
     }

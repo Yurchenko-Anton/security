@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="3" author="Yurchenko-Anton">
+        <insert tableName="users"
+        dbms="mysql">
+            <column name="first_name" value="Admin"/>
+            <column name="last_name" value="A"/>
+            <column name="phone" value="+380937777777"/>
+            <column name="password" value="$2a$12$J8hbuK6xJMg98/kRcQ9lQeh.4WGFd1cQLo5uJdKPhNIdsdMffBmG2"/>
+            <column name="role" value="ADMIN"/>
+            <column name="status" value="APPROVED"/>
+        </insert>
+        <insert tableName="users"
+        dbms="mysql">
+            <column name="first_name" value="Driver"/>
+            <column name="last_name" value="D"/>
+            <column name="phone" value="+380936666666"/>
+            <column name="password" value="$2a$12$6kSjB37op6Nih0lysPrOyOCZuwj./ArED2Z33m4wB3SuZon1.n95S"/>
+            <column name="role" value="DRIVER"/>
+            <column name="status" value="APPROVED"/>
+        </insert>
+        <insert tableName="users"
+        dbms="mysql">
+            <column name="first_name" value="Passenger"/>
+            <column name="last_name" value="P"/>
+            <column name="phone" value="+380935555555"/>
+            <column name="password" value="$2a$12$jigUphkiqT.PeOvfVSle4.kfHKEDm2dyBoWhVybabCQWlfYtNfNh2"/>
+            <column name="role" value="PASSENGER"/>
+            <column name="status" value="APPROVED"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
