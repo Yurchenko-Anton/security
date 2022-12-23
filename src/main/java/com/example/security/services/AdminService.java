@@ -31,7 +31,6 @@ public class AdminService {
 
     public Optional<User> findUsers(Long id) {
         return userRepository.findById(id);
-
     }
 
     public ResponseEntity<User> changeRole(Long id, Role role) {

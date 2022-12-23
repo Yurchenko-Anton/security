@@ -6,6 +6,7 @@ import com.example.security.model.Status;
 import com.example.security.repository.UserRepository;
 import com.example.security.security.JwtTokenProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class UsersService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private void saveUser(User user){
+    private void saveUser(User user) {
         userRepository.save(user);
     }
 
@@ -34,19 +35,21 @@ public class UsersService {
         saveUser(user);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByPhone(String phone){
-        return userRepository.findByPhone(phone);
+    public ResponseEntity<User> getUserByPhone(String phone) {
+        return userRepository.findByPhone(phone).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public Optional<User> getUserById(Long id){
-        return userRepository.findById(id);
+    public ResponseEntity<User> getUserById(Long id) {
+        return userRepository.findById(id).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public User createNewUser(User user){
+    public User createNewUser(User user) {
         user.setPassword(encryptPass(user.getPassword()));
         user.setStatus(validate(user));
         saveUser(user);

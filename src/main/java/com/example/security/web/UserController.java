@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,13 +32,13 @@ public class UserController {
 
     @GetMapping("/phone/{phone}")
     @PreAuthorize("hasAuthority('users:read')")
-    public Optional<User> getByPhone(@PathVariable String phone) {
+    public ResponseEntity<User> getByPhone(@PathVariable String phone) {
         return usersService.getUserByPhone(phone);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('users:read')")
-    public Optional<User> getById(@PathVariable Long id) {
+    public ResponseEntity<User> getById(@PathVariable Long id) {
         return usersService.getUserById(id);
     }
 
