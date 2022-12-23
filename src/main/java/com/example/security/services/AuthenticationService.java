@@ -41,7 +41,7 @@ public class AuthenticationService {
     public Map<String, String> buildResponse(User user) {
         return new HashMap<String, String>() {
             {
-                put("phone", user.getPhone());
+                put("id", user.getId().toString());
                 put("token", jwtTokenProvider.createToken(user.getId(), user.getRole().name(), user.getPhone()));
             }
         };
