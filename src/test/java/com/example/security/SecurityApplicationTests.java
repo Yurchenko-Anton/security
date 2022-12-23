@@ -43,16 +43,16 @@ class SecurityApplicationTests {
     private static AuthenticationRequestDTO admin;
     private static AuthenticationRequestDTO notAdmin;
 
-    private static final String ADMIN_PHONE = "+380937777777";
+    private static final String ADMIN_ID = "+380937777777";
     private static final String ADMIN_PASS = "admin";
-    private static final String NOT_ADMIN_PHONE = "+380935555555";
+    private static final String NOT_ADMIN_ID = "+380935555555";
     private static final String NOT_ADMIN_PASS = "passenger";
     private User user;
 
     @BeforeAll
     public static void init() {
-        admin = new AuthenticationRequestDTO(ADMIN_PHONE, ADMIN_PASS);
-        notAdmin = new AuthenticationRequestDTO(NOT_ADMIN_PHONE, NOT_ADMIN_PASS);
+        admin = new AuthenticationRequestDTO(ADMIN_ID, ADMIN_PASS);
+        notAdmin = new AuthenticationRequestDTO(NOT_ADMIN_ID, NOT_ADMIN_PASS);
     }
 
     @BeforeEach

@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 public class AuthenticationRequestDTO {
-    Long id;
+    String phone;
     String password;
 }

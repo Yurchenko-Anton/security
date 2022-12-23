@@ -27,14 +27,14 @@ public class AuthenticationService {
 
 
     public Map<String, String> authenticate(AuthenticationRequestDTO request) throws AuthenticationException {
-        boolean authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getId(), request.getPassword())).isAuthenticated();
-        User user = findUser( authenticate, request);
+        boolean authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getPhone(), request.getPassword())).isAuthenticated();
+        User user = findUser(authenticate, request);
         return buildResponse(user);
     }
 
     private User findUser(boolean auth, AuthenticationRequestDTO request) throws AuthenticationException {
         if (auth) {
-            return userRepository.findById(request.getId()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
+            return userRepository.findByPhone(request.getPhone()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
         } else throw new UsernameNotFoundException("User doesn't authenticate");
     }
 
